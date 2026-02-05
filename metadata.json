@@ -1,0 +1,7 @@
+{
+  "name": "Student Link",
+  "description": "A mobile-first platform connecting Nigerian tertiary students for resource sharing, social interaction, and school-specific networking.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
