@@ -1,5 +1,5 @@
 
-export type Role = 'student' | 'admin';
+// Add exported interfaces to make this file a valid TypeScript module and provide types for the application.
 
 export interface User {
   id: string;
@@ -8,47 +8,16 @@ export interface User {
   university: string;
   department: string;
   level: string;
-  role: Role;
-  avatar?: string;
+  role: 'admin' | 'student';
   password?: string;
-  friends: string[]; 
-}
-
-export interface FriendRequest {
-  id: string;
-  senderId: string;
-  senderName: string;
-  senderAvatar?: string;
-  receiverId: string;
-  status: 'pending' | 'accepted';
-  timestamp: number;
-}
-
-export interface Message {
-  id: string;
-  senderId: string;
-  receiverId: string;
-  text: string;
-  timestamp: number;
+  avatar: string;
+  friends: string[];
 }
 
 export interface PostMedia {
   type: 'image' | 'video' | 'audio';
   url: string;
   name?: string;
-}
-
-export interface Post {
-  id: string;
-  userId: string;
-  authorName: string;
-  university: string;
-  content: string;
-  media?: PostMedia;
-  likes: string[]; 
-  comments: Comment[];
-  status: 'approved';
-  createdAt: number;
 }
 
 export interface Comment {
@@ -59,27 +28,27 @@ export interface Comment {
   createdAt: number;
 }
 
-export interface Notification {
+export interface Post {
   id: string;
-  title: string;
-  message: string;
-  timestamp: number;
-  isRead: boolean;
-  isGlobal?: boolean;
-  type?: 'friend_request' | 'resource_approval' | 'quiz_alert' | 'general';
-  fromUserId?: string;
+  userId: string;
+  authorName: string;
+  university: string;
+  content: string;
+  media?: PostMedia;
+  likes: string[];
+  comments: Comment[];
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: number;
 }
 
 export interface Resource {
   id: string;
-  userId: string;
-  userName: string;
   title: string;
   description: string;
   link: string;
   department: string;
   level: string;
-  status: 'pending' | 'approved';
+  status: 'pending' | 'approved' | 'rejected';
   createdAt: number;
 }
 
@@ -88,17 +57,35 @@ export interface CompetitionEvent {
   userId: string;
   title: string;
   description: string;
-  rules: string;
-  deadline: string;
-  link: string;
-  image?: string;
+  rules?: string;
+  deadline?: string;
+  link?: string;
   type: 'competition' | 'event';
-  status: 'pending' | 'approved';
+  image?: string;
+  status: 'pending' | 'approved' | 'rejected';
   createdAt: number;
 }
 
-export interface QuizQuestion {
+export interface Notification {
   id: string;
+  title: string;
+  message: string;
+  timestamp: number;
+  isRead: boolean;
+  fromUserId?: string;
+  type?: 'friend_request' | 'system' | 'announcement';
+  isGlobal?: boolean;
+}
+
+export interface Message {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  text: string;
+  timestamp: number;
+}
+
+export interface QuizQuestion {
   text: string;
   options: string[];
   correctIndex: number;
@@ -108,11 +95,11 @@ export interface Quiz {
   id: string;
   title: string;
   description: string;
+  durationMinutes: number;
   questions: QuizQuestion[];
   createdAt: number;
-  durationMinutes: number;
   active: boolean;
-  startTime?: number; 
+  startTime?: number;
   expiresAt?: number;
 }
 
@@ -123,5 +110,15 @@ export interface QuizScore {
   userName: string;
   score: number;
   total: number;
+  timestamp: number;
+}
+
+export interface FriendRequest {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar: string;
+  receiverId: string;
+  status: 'pending' | 'accepted' | 'rejected';
   timestamp: number;
 }

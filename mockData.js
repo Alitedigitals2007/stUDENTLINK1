@@ -13,3 +13,7 @@ export const INITIAL_USERS = [
     friends: [],
   }
 ];
+
+export const INITIAL_POSTS = [];
+export const INITIAL_RESOURCES = [];
+export const INITIAL_EVENTS = [];

@@ -1,5 +1,12 @@
 
+import { createClient } from '@supabase/supabase-js';
 import { INITIAL_USERS } from './mockData';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uqbglkoudzftkgrnhsrb.supabase.co';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY || 'sb_publishable_z6ZcVuaEwEYSmRb7wvICQA_7zkYZFPO';
+
+export const isSupabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+export const supabase = isSupabaseConfigured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
@@ -26,7 +33,7 @@ export const db = {
       await delay(100);
     },
     update: async (updatedUser) => {
-      const users = await db.users.getAll();
+      const users = getLocal('sl_db_users', INITIAL_USERS);
       const newUsers = users.map(u => u.id === updatedUser.id ? updatedUser : u);
       setLocal('sl_db_users', newUsers);
       await delay(100);
@@ -47,11 +54,13 @@ export const db = {
   },
   posts: {
     getAll: async () => {
+      await delay(100);
       return getLocal('sl_db_posts', []);
     },
     create: async (post) => {
       const posts = getLocal('sl_db_posts', []);
       setLocal('sl_db_posts', [post, ...posts]);
+      await delay(100);
     }
   },
   resources: {
@@ -61,6 +70,32 @@ export const db = {
     create: async (res) => {
       const items = getLocal('sl_db_resources', []);
       setLocal('sl_db_resources', [res, ...items]);
+    },
+    update: async (updated) => {
+      const items = getLocal('sl_db_resources', []);
+      setLocal('sl_db_resources', items.map(i => i.id === updated.id ? updated : i));
+    }
+  },
+  events: {
+    getAll: async () => {
+      return getLocal('sl_db_events', []);
+    },
+    create: async (evt) => {
+      const items = getLocal('sl_db_events', []);
+      setLocal('sl_db_events', [evt, ...items]);
+    },
+    update: async (updated) => {
+      const items = getLocal('sl_db_events', []);
+      setLocal('sl_db_events', items.map(i => i.id === updated.id ? updated : i));
+    }
+  },
+  messages: {
+    getAll: async () => {
+      return getLocal('sl_db_messages', []);
+    },
+    send: async (msg) => {
+      const items = getLocal('sl_db_messages', []);
+      setLocal('sl_db_messages', [...items, msg]);
     }
   },
   notifications: {
@@ -74,6 +109,24 @@ export const db = {
     markRead: async (id) => {
       const items = getLocal('sl_db_notifs', []);
       setLocal('sl_db_notifs', items.map(n => n.id === id ? { ...n, isRead: true } : n));
+    }
+  },
+  quizzes: {
+    getAll: async () => {
+      return getLocal('sl_db_quizzes', []);
+    },
+    create: async (quiz) => {
+      const items = getLocal('sl_db_quizzes', []);
+      setLocal('sl_db_quizzes', [quiz, ...items]);
+    },
+    scores: {
+      getAll: async () => {
+        return getLocal('sl_db_quiz_scores', []);
+      },
+      create: async (score) => {
+        const items = getLocal('sl_db_quiz_scores', []);
+        setLocal('sl_db_quiz_scores', [score, ...items]);
+      }
     }
   }
 };
