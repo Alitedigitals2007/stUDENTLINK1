@@ -12,29 +12,32 @@ export const supabase = isSupabaseConfigured ? createClient(SUPABASE_URL, SUPABA
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 const getLocal = <T>(key: string, fallback: T): T => {
+  if (typeof window === 'undefined') return fallback;
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : fallback;
 };
 
 const setLocal = <T>(key: string, value: T) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
 };
 
 export const db = {
   users: {
     getAll: async (): Promise<User[]> => {
-      await delay(200);
+      await delay(100);
       return getLocal('sl_db_users', INITIAL_USERS);
     },
     save: async (users: User[]) => {
       setLocal('sl_db_users', users);
-      await delay(200);
+      await delay(100);
     },
     update: async (updatedUser: User) => {
       const users = getLocal<User[]>('sl_db_users', INITIAL_USERS);
       const newUsers = users.map(u => u.id === updatedUser.id ? updatedUser : u);
       setLocal('sl_db_users', newUsers);
-      await delay(200);
+      await delay(100);
     }
   },
   friendRequests: {
@@ -52,13 +55,13 @@ export const db = {
   },
   posts: {
     getAll: async (): Promise<Post[]> => {
-      await delay(300);
+      await delay(100);
       return getLocal('sl_db_posts', []);
     },
     create: async (post: Post) => {
       const posts = getLocal<Post[]>('sl_db_posts', []);
       setLocal('sl_db_posts', [post, ...posts]);
-      await delay(200);
+      await delay(100);
     }
   },
   resources: {

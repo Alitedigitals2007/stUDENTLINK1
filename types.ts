@@ -11,14 +11,17 @@ export interface User {
   role: Role;
   avatar?: string;
   password?: string;
-  friends: string[]; // List of User IDs
+  friends: string[]; 
 }
 
 export interface FriendRequest {
   id: string;
   senderId: string;
+  senderName: string;
+  senderAvatar?: string;
   receiverId: string;
   status: 'pending' | 'accepted';
+  timestamp: number;
 }
 
 export interface Message {
@@ -42,10 +45,9 @@ export interface Post {
   university: string;
   content: string;
   media?: PostMedia;
-  likes: string[]; // User IDs
+  likes: string[]; 
   comments: Comment[];
   status: 'approved';
-  isFeatured?: boolean;
   createdAt: number;
 }
 
@@ -64,18 +66,20 @@ export interface Notification {
   timestamp: number;
   isRead: boolean;
   isGlobal?: boolean;
+  type?: 'friend_request' | 'resource_approval' | 'quiz_alert' | 'general';
+  fromUserId?: string;
 }
 
 export interface Resource {
   id: string;
   userId: string;
+  userName: string;
   title: string;
   description: string;
   link: string;
   department: string;
   level: string;
   status: 'pending' | 'approved';
-  isFeatured?: boolean;
   createdAt: number;
 }
 
@@ -108,7 +112,7 @@ export interface Quiz {
   createdAt: number;
   durationMinutes: number;
   active: boolean;
-  startTime?: number; // For scheduling
+  startTime?: number; 
   expiresAt?: number;
 }
 
